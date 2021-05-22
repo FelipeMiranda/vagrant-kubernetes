@@ -7,7 +7,7 @@
 # you're doing.
 Vagrant.configure("2") do |config|
     config.env.enable
-    
+    config.ssh.insert_key = false    
     # VM's
     config.vm.define :enki do |enki|
 	enki.vm.box = "focal-server-cloudimg-amd64-vagrant"
@@ -32,12 +32,6 @@ Vagrant.configure("2") do |config|
         enki.vm.provider :virtualbox do |v|
             v.memory = 2048
             v.cpus = 2
-        end
-        enki.vm.provision "ansible" do |ansible|
-            ansible.playbook = "./playbooks/master-playbook.yaml"
-            ansible.extra_vars = {
-               node_ip: "192.168.15.20",
-            }
         end
     end
     config.vm.define :enlil do |enlil|
@@ -64,12 +58,6 @@ Vagrant.configure("2") do |config|
             v.memory = 2048
             v.cpus = 2
         end
-        enlil.vm.provision "ansible" do |ansible|
-            ansible.playbook = "./playbooks/nodes-playbook.yaml"
-            ansible.extra_vars = {
-               node_ip: "192.168.15.21",
-            }
-        end
     end
     config.vm.define :utu do |utu|
         utu.vm.box = "focal-server-cloudimg-amd64-vagrant"
@@ -95,12 +83,26 @@ Vagrant.configure("2") do |config|
             v.memory = 2048
             v.cpus = 2
         end
-        utu.vm.provision "ansible" do |ansible|
-            ansible.playbook = "./playbooks/nodes-playbook.yaml"
+        utu.vm.provision "master-playbook", type: 'ansible' do |ansible|
+            ansible.playbook = "provisioning/master-playbook.yaml"
+            ansible.config_file = "ansible.cfg"
+            ansible.inventory_path = "provisioning/hosts"
+            ansible.limit = "all"
             ansible.extra_vars = {
-               node_ip: "192.168.15.22",
+               node_ip: "192.168.15.20",
             }
         end
+        utu.vm.provision "worker-playbook", type: 'ansible' do |ansible|
+            ansible.playbook = "provisioning/nodes-playbook.yaml"
+            ansible.config_file = "ansible.cfg"
+            ansible.inventory_path = "provisioning/hosts"
+            ansible.limit = "all"
+        end
+        utu.vm.provision "deploy-charts", type: 'ansible' do |ansible|
+            ansible.playbook = "provisioning/deploy-helm-charts-playbook.yaml"
+            ansible.limit = "all"
+            ansible.config_file = "ansible.cfg"
+            ansible.inventory_path = "provisioning/hosts"
+        end
     end 
-
 end

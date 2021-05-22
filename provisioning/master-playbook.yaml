@@ -1,5 +1,5 @@
 ---
-- hosts: all
+- hosts: master
   become: true
   tasks:
   - name: Install packages that allow apt to be used over HTTPS
@@ -96,6 +96,7 @@
 
   - name: Initialize the Kubernetes cluster using kubeadm
     command: kubeadm init --apiserver-advertise-address="192.168.15.20" --apiserver-cert-extra-sans="192.168.15.20"  --node-name enki --pod-network-cidr=172.16.0.0/16
+    ignore_errors: yes
 
   - name: Setup kubeconfig for vagrant user
     command: "{{ item }}"
