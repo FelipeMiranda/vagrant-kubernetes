@@ -21,10 +21,11 @@
       path: /etc/containerd
       state: directory
 
-#  - name: Creates kubelet directory
-#    file:
-#      path: /etc/default/kubelet
-#      state: directory
+  - name: Creates kubelet directory
+    file:
+      path: /etc/default/kubelet
+      state: touch
+      mode: 0644
 
   - name: Configure containerd and start the service
     command: containerd config default  /etc/containerd/config.toml
@@ -75,10 +76,10 @@
         - kubeadm 
         - kubectl
 
-#  - name: Configure node ip
-#    lineinfile:
-#      path: /etc/default/kubelet
-#      line: KUBELET_EXTRA_ARGS=--node-ip={{ node_ip }}
+  - name: Configure node ip
+    lineinfile:
+      path: /etc/default/kubelet
+      line: KUBELET_EXTRA_ARGS=--node-ip={{ node_ip }}
 
   - name: Restart kubelet
     service:
