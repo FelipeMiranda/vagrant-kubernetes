@@ -76,10 +76,19 @@
         - kubeadm 
         - kubectl
 
-  - name: Configure node ip
+  - name: Configure worker 01 node ip
     lineinfile:
       path: /etc/default/kubelet
-      line: KUBELET_EXTRA_ARGS=--node-ip={{ node_ip }}
+      line: KUBELET_EXTRA_ARGS=--node-ip={{ worker_01_node_ip }}
+    when: inventory_hostname == groups['workers'][0]
+    with_items: "{{ groups['workers'] }}"
+
+  - name: Configure worker 02 node ip
+    lineinfile:
+      path: /etc/default/kubelet
+      line: KUBELET_EXTRA_ARGS=--node-ip={{ worker_02_node_ip }}
+    when: inventory_hostname == groups['workers'][1]
+    with_items: "{{ groups['workers'] }}"
 
   - name: Restart kubelet
     service:

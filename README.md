@@ -8,7 +8,7 @@
 
 > **tested with Vagrant 2.2.16, ansible 2.10.8, virtualbox v6.1.22 on a MacOS but it should work on all systems**
 
-This code will get 3 Vbox machines each with 1vcpu and 2GB of memory RAM with kubernetes 1.21 running with Containerd as the container engine, so no docker-shim ;)
+This code will get you a 3 Vbox machines setup, each node with 1vcpu and 2GB of memory RAM with kubernetes 1.21 running with Containerd as the container engine, so no docker-shim ;)
 
 The method of ingress, we choosed to install Metal LB and Ingress Nginx Controller, so we could have Loadbalance support on a Bare Metal installation.
 
