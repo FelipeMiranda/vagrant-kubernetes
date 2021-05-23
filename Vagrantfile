@@ -62,7 +62,7 @@ Vagrant.configure("2") do |config|
         enlil.vm.hostname = WORKER_NODE_01
         enlil.vm.network :private_network, virtualbox__intnet: INTNET_NAME,
             name: "enp0s2",
-            ip: WORKER_NODE_01,
+            ip: WORKER_NODE_01_INTNET_IP,
             netmask: "255.255.255.0"
         enlil.vm.network :public_network, bridge: BRIDGE_INTERFACE,
             name: "enp0s3",
